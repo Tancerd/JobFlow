@@ -1,4 +1,4 @@
-package org.pwr.zssk.model;
+package org.pwr.zssk.support;
 
 public class Order {
 	
