@@ -21,13 +21,13 @@ public class RulesTest {
 	public void before()
 	{
 		Job job1 = new Job();
-		job1.setTimeToNextAction(10);
+		job1.setTimeOfNextAction(10);
 		
 		Job job2 = new Job();
-		job1.setTimeToNextAction(20);
+		job1.setTimeOfNextAction(20);
 		
 		Job job3 = new Job();
-		job1.setTimeToNextAction(5);
+		job1.setTimeOfNextAction(5);
 		
 		jobList = new ArrayList<>(10);
 		

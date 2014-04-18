@@ -14,6 +14,8 @@ public class JobFlowAlgorithm {
 	private Comparator<OrderComponent> comparator = new Comparator<OrderComponent>() {
 		@Override
 		public int compare(OrderComponent x, OrderComponent y) {
+			if (x instanceof Job) return 1;
+			if (y instanceof Job) return -1;
 			if (x.getTimeOfNextAction() < y.getTimeOfNextAction()) {
 				return -1;
 			}
@@ -45,6 +47,7 @@ public class JobFlowAlgorithm {
 			{
 				Job job = (Job) orderComponent;
 				Machine machine = findMachine(job);
+				if (machine == null) continue;
 				machine.addNewJob(job);
 				if (machine.getStatus().equals(MachineStatus.WAITING)) {
 					machine.setTimeOfNextAction(calculateTime);
@@ -56,6 +59,13 @@ public class JobFlowAlgorithm {
 				Machine machine = (Machine) orderComponent;
 				calculateTime = machine.getTimeOfNextAction();
 				machine.setNextAction();
+				if (machine.getStatus().equals(MachineStatus.JOB))
+				{
+					Job job = machine.getDoneJob();
+					job.setTimeOfNextAction(calculateTime);
+					job.setNextAction();
+					orderQueue.add(job);
+				}
 				if (!machine.getStatus().equals(MachineStatus.WAITING))
 					orderQueue.add(machine);
 			}
@@ -67,6 +77,7 @@ public class JobFlowAlgorithm {
 		Machine machine = new Machine();
 		machine.setId(job.getNextMachine());
 		int index = machineList.indexOf(machine);
+		if (index == -1) return null;
 		return machineList.get(index);
 	}
 

@@ -9,17 +9,16 @@ public class Job implements OrderComponent {
 	private int id;
 
 	private List<Order> orderList;
-	private int timeToNextAction = 0;
+	private int timeOfNextAction = 0;
 	private int orderCounter = 0;
 
 	@Override
 	public int getTimeOfNextAction() {
-		return timeToNextAction;
+		return timeOfNextAction;
 	}
 
 	@Override
 	public void setNextAction() {
-		timeToNextAction += orderList.get(orderCounter).getTime();
 		orderCounter++;
 	}
 
@@ -44,8 +43,8 @@ public class Job implements OrderComponent {
 		return orderList.get(index).getTime();
 	}
 
-	public void setTimeToNextAction(int timeToNextAction) {
-		this.timeToNextAction = timeToNextAction;
+	public void setTimeOfNextAction(int timeOfNextAction) {
+		this.timeOfNextAction = timeOfNextAction;
 	}
 
 	public List<Order> getOrderList() {

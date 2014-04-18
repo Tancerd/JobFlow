@@ -92,6 +92,10 @@ public class Machine implements OrderComponent {
 		this.timeOfNextAction = timeOfNextAction;
 	}
 
+	public Job getDoneJob() {
+		return doneJob;
+	}
+
 
 	
 	
