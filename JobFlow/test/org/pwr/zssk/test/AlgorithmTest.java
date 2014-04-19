@@ -1,6 +1,6 @@
 package org.pwr.zssk.test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +10,12 @@ import org.junit.Test;
 import org.pwr.zssk.logic.JobFlowAlgorithm;
 import org.pwr.zssk.model.Job;
 import org.pwr.zssk.model.Machine;
+import org.pwr.zssk.model.rule.EDD;
 import org.pwr.zssk.model.rule.FIFO;
+import org.pwr.zssk.model.rule.LIFO;
+import org.pwr.zssk.model.rule.LPT;
+import org.pwr.zssk.model.rule.LWR;
+import org.pwr.zssk.model.rule.SPT;
 import org.pwr.zssk.support.Order;
 import org.pwr.zssk.support.Prepare;
 
@@ -46,15 +51,13 @@ public class AlgorithmTest {
 		
 		machine1 = new Machine();
 		machine1.setId(1);
-		machine1.applyRule(FIFO.class);
+		
 		
 		machine2 = new Machine();
 		machine2.setId(2);
-		machine2.applyRule(FIFO.class);
 		
 		machine3 = new Machine();
 		machine3.setId(3);
-		machine3.applyRule(FIFO.class);
 		
 		jobFlowAlgorithm = new JobFlowAlgorithm();
 		List<Job> jobList = new ArrayList<Job>();
@@ -67,9 +70,6 @@ public class AlgorithmTest {
 		machineList.add(machine3);
 		jobFlowAlgorithm.setMachineList(machineList);
 		
-	}
-	@Test
-	public void shouldWork() throws Exception {
 		List<Prepare> prepareList = new ArrayList<Prepare>(10);
 		Prepare prepare1 = new Prepare(1, 4);
 		Prepare prepare2 = new Prepare(2, 6);
@@ -79,6 +79,69 @@ public class AlgorithmTest {
 		machine1.setPrepareList(prepareList);
 		machine2.setPrepareList(prepareList);
 		machine3.setPrepareList(prepareList);
+		
+	}
+	@Test
+	public void shouldWorkWhenFIFO() throws Exception {
+		
+		machine1.applyRule(FIFO.class);
+		machine2.applyRule(FIFO.class);
+		machine3.applyRule(FIFO.class);
+		
+		int result = jobFlowAlgorithm.calculate();
+		assertEquals(43, result);
+	}
+	
+	@Test
+	public void shouldWorkWhenLIFO() throws Exception {
+		
+		machine1.applyRule(LIFO.class);
+		machine2.applyRule(LIFO.class);
+		machine3.applyRule(LIFO.class);
+		
+		int result = jobFlowAlgorithm.calculate();
+		assertEquals(43, result);
+	}
+	
+	@Test
+	public void shouldWorkWhenEDD() throws Exception {
+		
+		machine1.applyRule(EDD.class);
+		machine2.applyRule(EDD.class);
+		machine3.applyRule(EDD.class);
+		
+		int result = jobFlowAlgorithm.calculate();
+		assertEquals(43, result);
+	}
+	
+	@Test
+	public void shouldWorkWhenLPT() throws Exception {
+		
+		machine1.applyRule(LPT.class);
+		machine2.applyRule(LPT.class);
+		machine3.applyRule(LPT.class);
+		
+		int result = jobFlowAlgorithm.calculate();
+		assertEquals(43, result);
+	}
+	
+	@Test
+	public void shouldWorkWhenSPT() throws Exception {
+		
+		machine1.applyRule(SPT.class);
+		machine2.applyRule(SPT.class);
+		machine3.applyRule(SPT.class);
+		
+		int result = jobFlowAlgorithm.calculate();
+		assertEquals(43, result);
+	}
+	
+	@Test
+	public void shouldWorkWhenLWR() throws Exception {
+		
+		machine1.applyRule(LWR.class);
+		machine2.applyRule(LWR.class);
+		machine3.applyRule(LWR.class);
 		
 		int result = jobFlowAlgorithm.calculate();
 		assertEquals(43, result);

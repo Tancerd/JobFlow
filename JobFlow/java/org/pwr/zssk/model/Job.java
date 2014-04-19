@@ -55,4 +55,23 @@ public class Job implements OrderComponent {
 		this.orderList = orderList;
 	}
 
+	public int getTimeForNextMachine() {
+		return getTimeForMachine(getNextMachine());
+	}
+
+	public int getSumOfAllTimes() {
+		int result = 0;
+		for (Order o : orderList)
+			result += o.getTime();
+		return result;
+	}
+
+	public int getSumOfRestTimes() {
+		int result = 0;
+		for (int i = orderCounter; i < orderList.size(); i++) {
+			result += orderList.get(i).getTime();
+		}
+		return result;
+	}
+
 }

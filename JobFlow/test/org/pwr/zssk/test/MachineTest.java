@@ -39,7 +39,7 @@ public class MachineTest {
 		
 		machine = new Machine();
 		machine.setId(1);
-		machine.applyRule(FIFO.class);
+		
 		
 		List<Prepare> prepareList = new ArrayList<Prepare>(10);
 		Prepare prepare = new Prepare(1, 4);
@@ -51,6 +51,8 @@ public class MachineTest {
 	
 	@Test
 	public void shouldWork() throws Exception {
+		machine.applyRule(FIFO.class);
+		
 		assertEquals(MachineStatus.WAITING, machine.getStatus());
 		assertEquals(0, machine.getTimeOfNextAction());
 		
