@@ -28,10 +28,13 @@ public class Machine implements OrderComponent {
 	public void setNextAction() {
 		switch (status) {
 		case PREPARE:
-			if (buffor.isEmpty())
+			if (buffor.isEmpty()) {
 				status = MachineStatus.WAITING;
-			else
-				status = MachineStatus.JOB;
+				break;
+			} else
+				doneJob = buffor.poll();
+			timeOfNextAction += doneJob.getTimeForMachine(id);
+			status = MachineStatus.JOB;
 			break;
 		case JOB:
 			timeOfNextAction += getPrepareTime();
@@ -96,8 +99,16 @@ public class Machine implements OrderComponent {
 		return doneJob;
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		Machine machine = (Machine) obj;
+		if (machine == null)
+			return false;
+		return machine.getId() == this.getId();
+	}
 
-	
-	
+	public boolean justReturnedToWork() {
+		return buffor.size() == 1;
+	}
 
 }

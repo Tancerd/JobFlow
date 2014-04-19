@@ -23,7 +23,7 @@ public class Job implements OrderComponent {
 	}
 
 	public int getNextMachine() {
-		if (orderCounter == orderList.size())
+		if (orderCounter >= orderList.size())
 			return -1;
 		return orderList.get(orderCounter).getMachine();
 	}

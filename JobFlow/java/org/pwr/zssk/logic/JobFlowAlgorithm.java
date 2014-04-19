@@ -14,15 +14,18 @@ public class JobFlowAlgorithm {
 	private Comparator<OrderComponent> comparator = new Comparator<OrderComponent>() {
 		@Override
 		public int compare(OrderComponent x, OrderComponent y) {
-			if (x instanceof Job) return 1;
-			if (y instanceof Job) return -1;
 			if (x.getTimeOfNextAction() < y.getTimeOfNextAction()) {
 				return -1;
 			}
-			if (x.getTimeOfNextAction() > y.getTimeOfNextAction()) {
+			else if (x.getTimeOfNextAction() > y.getTimeOfNextAction()) {
 				return 1;
 			}
-			return 0;
+			else
+			{
+				if (x instanceof Job && !(y instanceof Job)) return -1;
+				if (y instanceof Job && !(x instanceof Job)) return 1;
+				return 0;
+			}
 		}
 	};
 
@@ -49,16 +52,17 @@ public class JobFlowAlgorithm {
 				Machine machine = findMachine(job);
 				if (machine == null) continue;
 				machine.addNewJob(job);
-				if (machine.getStatus().equals(MachineStatus.WAITING)) {
-					machine.setTimeOfNextAction(calculateTime);
+				if (machine.getStatus().equals(MachineStatus.WAITING) && machine.justReturnedToWork()) {
+					machine.setTimeOfNextAction(job.getTimeOfNextAction());
 					orderQueue.add(machine);
 				}
 			}
 			else
 			{
-				Machine machine = (Machine) orderComponent;
-				calculateTime = machine.getTimeOfNextAction();
+				Machine machine = (Machine) orderComponent;	
 				machine.setNextAction();
+				calculateTime = machine.getTimeOfNextAction();
+				System.out.println(machine.getId() + " " + calculateTime);
 				if (machine.getStatus().equals(MachineStatus.JOB))
 				{
 					Job job = machine.getDoneJob();
@@ -74,6 +78,7 @@ public class JobFlowAlgorithm {
 	}
 
 	private Machine findMachine(Job job) {
+		if (job.getNextMachine() == -1) return null;
 		Machine machine = new Machine();
 		machine.setId(job.getNextMachine());
 		int index = machineList.indexOf(machine);
@@ -81,4 +86,21 @@ public class JobFlowAlgorithm {
 		return machineList.get(index);
 	}
 
+	public List<Job> getJobList() {
+		return jobList;
+	}
+
+	public void setJobList(List<Job> jobList) {
+		this.jobList = jobList;
+	}
+
+	public List<Machine> getMachineList() {
+		return machineList;
+	}
+
+	public void setMachineList(List<Machine> machineList) {
+		this.machineList = machineList;
+	}
+
+	
 }
