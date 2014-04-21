@@ -3,6 +3,7 @@ package org.pwr.zssk.dataaccess;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.pwr.zssk.logic.JobFlowAlgorithm;
 import org.pwr.zssk.model.Job;
 import org.pwr.zssk.model.Machine;
 import org.pwr.zssk.model.rule.EDD;
@@ -16,22 +17,79 @@ import org.pwr.zssk.support.Prepare;
 
 public class Facade {
 
-	private int machineNumber;
-	private int jobNumber;
+	
 	private List<Job> jobList = new ArrayList<Job>();
 	private List<Machine> machineList = new ArrayList<Machine>();
+	
+	private JobFlowAlgorithm jobFlowAlgorithm;
+	
+	private DataStore dataStore = new DataStore();
+	private ResultStore resultStore = new ResultStore();
 
-	public void setNumberOfMachines(int m) {
-		machineNumber = m;
+	
+	public void prepareAlgorithm()
+	{
+		jobList = new ArrayList<Job>(dataStore.getJobNumber());
+		machineList = new ArrayList<Machine>(dataStore.getMachineNumber());
+		
+		this.prepareArriveTimeForJobs();
+		this.prepareOrderForJobs();
+		this.prepareRulesForMachines();
+		
+		jobFlowAlgorithm = new JobFlowAlgorithm();
+		jobFlowAlgorithm.setJobList(jobList);
+		jobFlowAlgorithm.setMachineList(machineList);
 	}
-
-	public void setNumberOfJobs(int j) {
-		jobNumber = j;
+	
+	public void Calculate()
+	{
+		int result = jobFlowAlgorithm.calculate();
+		
+		double[] averageTimeOfMakingJob = new double[dataStore.getMachineNumber()];
+		int[] numberOfJobsOnMachine = new int[dataStore.getMachineNumber()];
+		double[] averageTimeOfPrepareMachine = new double[dataStore.getMachineNumber()];
+		double[] averageTimeOfWaitingForMachine = new double[dataStore.getJobNumber()];
+		double[] averageTimeOfWaitingForJob = new double[dataStore.getMachineNumber()];
+		
+		int[] timeOfJobEnd = new int[dataStore.getJobNumber()];
+		
+		for (int i = 0; i < jobFlowAlgorithm.getJobList().size(); i++) {
+			Job j = jobFlowAlgorithm.getJobList().get(i);
+			timeOfJobEnd[i] = j.getTimeOfNextAction();
+			for (Order o : j.getOrderList())
+			{
+				averageTimeOfMakingJob[o.getMachine()-1] += o.getTime();
+				numberOfJobsOnMachine[o.getMachine()-1]++;
+			}
+			//averageTimeOfWaitingForMachine[i] = 0; //TODO
+			
+			
+		}
+		
+		for (int i = 0; i < jobFlowAlgorithm.getMachineList().size(); i++) {
+			averageTimeOfMakingJob[i] /= numberOfJobsOnMachine[i];
+			
+			Machine m = jobFlowAlgorithm.getMachineList().get(i);
+			for(Prepare p : m.getPrepareList())
+				averageTimeOfPrepareMachine[i] += p.getTime();
+			averageTimeOfPrepareMachine[i] /= m.getPrepareList().size();
+			
+			
+		}
+		
+		resultStore.setAverageTimeOfMakingJob(averageTimeOfMakingJob);
+		resultStore.setAverageTimeOfPrepareMachine(averageTimeOfPrepareMachine);
+		resultStore.setAverageTimeOfWaitingForJob(averageTimeOfWaitingForJob);
+		resultStore.setAverageTimeOfWaitingForMachine(averageTimeOfWaitingForMachine);
+		resultStore.setResultTime(result);
+		resultStore.setTimeOfJobEnd(timeOfJobEnd);
+		resultStore.setNumberOfJobsOnMachine(numberOfJobsOnMachine);
+		
 	}
-
 	// liczba maszyn musi siê zgadzac z liczba regul
-	public void setRulesForMachines(Rule[] rules) {
-		for (int i = 0; i < machineNumber; i++) {
+	private void prepareRulesForMachines() {
+		Rule[] rules = dataStore.getRules();
+		for (int i = 0; i < rules.length; i++) {
 			Class rule;
 			switch (rules[i]) {
 			case FIFO:
@@ -58,11 +116,12 @@ public class Facade {
 	}
 
 	// rozmiar m kolumn na j wierszy
-	public void setPrepareTimeForMachines(Integer[][] time) {
+	private void setPrepareTimeForMachines() {
+		Integer[][] time = dataStore.getPrepareTimes();
 		int i = 0;
 		for (Integer[] t : time) {
 			List<Prepare> prepareList = new ArrayList<>();
-			for (int j = 1; j <= jobNumber; j++) {
+			for (int j = 1; j <= t.length; j++) {
 				prepareList.add(new Prepare(j, t[j - 1]));
 			}
 			machineList.get(i).setPrepareList(prepareList);
@@ -71,14 +130,16 @@ public class Facade {
 	}
 
 	// rozmiar musi byc rowny liczbie jobow
-	public void setArriveTimeForJobs(Integer[] times) {
-		for (int i = 0; i < jobNumber; i++) {
+	private void prepareArriveTimeForJobs() {
+		Integer[] times = dataStore.getArriveTimes();
+		for (int i = 0; i < times.length; i++) {
 			jobList.get(i).setTimeOfNextAction(times[i]);
 		}
 	}
 
 	// lista o wielkosci j, z jobami po kolei
-	public void setOrderForJobs(String[][] orders) {
+	private void prepareOrderForJobs() {
+		String[][] orders = dataStore.getOrders();
 		int i = 0;
 		for (String[] o : orders) {
 			List <Order> orderList = new ArrayList<Order>();
@@ -92,4 +153,22 @@ public class Facade {
 			i++;
 		}
 	}
+
+	public DataStore getDataStore() {
+		return dataStore;
+	}
+
+	public void setDataStore(DataStore dataStore) {
+		this.dataStore = dataStore;
+	}
+
+	public ResultStore getResultStore() {
+		return resultStore;
+	}
+
+	public void setResultStore(ResultStore resultStore) {
+		this.resultStore = resultStore;
+	}
+	
+	
 }
