@@ -11,6 +11,9 @@ public class Job implements OrderComponent {
 	private List<Order> orderList;
 	private int timeOfNextAction = 0;
 	private int orderCounter = 0;
+	
+	private int waitingTime = 0;
+	private int startingWaitDate = 0;
 
 	@Override
 	public int getTimeOfNextAction() {
@@ -44,6 +47,7 @@ public class Job implements OrderComponent {
 	}
 
 	public void setTimeOfNextAction(int timeOfNextAction) {
+		waitingTime += timeOfNextAction - startingWaitDate - getTimeForNextMachine();
 		this.timeOfNextAction = timeOfNextAction;
 	}
 
@@ -73,5 +77,15 @@ public class Job implements OrderComponent {
 		}
 		return result;
 	}
+
+	public int getWaitingTime() {
+		return waitingTime;
+	}
+
+	public void setStartingWaitDate(int startingWaitDate) {
+		this.startingWaitDate = startingWaitDate;
+	}
+	
+	
 
 }

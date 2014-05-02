@@ -14,6 +14,10 @@ public class Machine implements OrderComponent {
 	private PriorityQueue<Job> buffor;
 	private int timeOfNextAction = 0;
 	private MachineStatus status = MachineStatus.WAITING;
+	
+	private int startingWaitDate = 0;
+	private int waitingTime = 0;
+	private int jobsNumber = 0;
 
 	private List<Prepare> prepareList;
 
@@ -30,6 +34,7 @@ public class Machine implements OrderComponent {
 		case PREPARE:
 			if (buffor.isEmpty()) {
 				status = MachineStatus.WAITING;
+				startingWaitDate = timeOfNextAction;
 				break;
 			} else
 				doneJob = buffor.poll();
@@ -42,7 +47,9 @@ public class Machine implements OrderComponent {
 			break;
 		case WAITING:
 			doneJob = buffor.poll();
+			waitingTime += timeOfNextAction - startingWaitDate;
 			timeOfNextAction += doneJob.getTimeForMachine(id);
+			
 			status = MachineStatus.JOB;
 			break;
 		}
@@ -58,6 +65,7 @@ public class Machine implements OrderComponent {
 
 	public void addNewJob(Job job) {
 		buffor.add(job);
+		jobsNumber++;
 	}
 
 	public void applyRule(Class c) {
@@ -97,6 +105,21 @@ public class Machine implements OrderComponent {
 
 	public Job getDoneJob() {
 		return doneJob;
+	}
+	
+	
+
+	public int getWaitingTime() {
+		return waitingTime;
+	}
+
+	public void setWaitingTime(int waitingTime) {
+		this.waitingTime = waitingTime;
+	}
+
+	
+	public int getJobsNumber() {
+		return jobsNumber;
 	}
 
 	@Override
