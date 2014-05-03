@@ -68,21 +68,21 @@ public class JobFlowAlgorithm {
 				int oldTime = machine.getTimeOfNextAction();
 				machine.setNextAction();
 				calculateTime = machine.getTimeOfNextAction();
-				//System.out.println("Time: " + oldTime + " Machine " + machine.getId() + ": START " +  machine.getStatus());
-				logsList.add("Time: " + oldTime + " Machine " + machine.getId() + ": START " +  machine.getStatus());
+				//System.out.println("Time: " + oldTime + " Machine " + machine.getId() + ": START " +  machine.getStatus() + " " + machine.getDoneJob().getId());
+				logsList.add("Time: " + oldTime + " Machine " + machine.getId() + ": START " +  machine.getStatus() + " " + machine.getDoneJob().getId());
 
 				if (machine.getStatus().equals(MachineStatus.JOB)) {
 					Job job = machine.getDoneJob();
 					job.setTimeOfNextAction(calculateTime);
 					job.setNextAction();
 					//System.out.println("Done Job: " + job.getId());
-					logsList.add("Done Job: " + job.getId());
+					//logsList.add("Done Job: " + job.getId());
 					orderQueue.add(job);
 				}
 				if (!machine.getStatus().equals(MachineStatus.WAITING))
 				{
-					//System.out.println("Time: " + calculateTime + " Machine " + machine.getId() + ": END " +  machine.getStatus());
-					logsList.add("Time: " + calculateTime + " Machine " + machine.getId() + ": END " +  machine.getStatus());
+					//System.out.println("Time: " + calculateTime + " Machine " + machine.getId() + ": END " +  machine.getStatus() + " " + machine.getDoneJob().getId());
+					logsList.add("Time: " + calculateTime + " Machine " + machine.getId() + ": END " +  machine.getStatus() + " " + machine.getDoneJob().getId());
 					orderQueue.add(machine);
 				}
 			}
