@@ -6,46 +6,46 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+
 import java.awt.CardLayout;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
+
 import javax.swing.JScrollPane;
+import javax.swing.JSlider;
 import javax.swing.JToolBar;
 import javax.swing.JLabel;
 import javax.swing.BoxLayout;
 import javax.swing.JSplitPane;
 import javax.swing.JButton;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+
 import net.miginfocom.swing.MigLayout;
+
+import java.awt.Dimension;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.awt.Color;
+
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
+
+import org.pwr.zssk.dataaccess.DataStore;
+
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 public class JobFlowFrame extends JFrame {
 	OptionsFrame optionsFrame ;
 	private JPanel contentPane;
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					JobFlowFrame frame = new JobFlowFrame();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+	private DataStore dataStore;
+	SimulationPanel simulationPanel;
+	JSlider simulationSizeSlider;
 
 	/**
 	 * Create the frame.
@@ -67,10 +67,12 @@ public class JobFlowFrame extends JFrame {
 		JScrollPane scrollPane = new JScrollPane();
 		splitPane.setRightComponent(scrollPane);
 		
-		JPanel panel_1 = new JPanel();
-		scrollPane.setViewportView(panel_1);
-		panel_1.setBackground(Color.WHITE);
 		
+		scrollPane.setPreferredSize(new Dimension(450, 110));
+	    simulationPanel = new SimulationPanel();
+		scrollPane.setViewportView(simulationPanel);
+		simulationPanel.setBackground(Color.WHITE);
+		scrollPane.setLocation(210,10);
 		JSplitPane splitPane_1 = new JSplitPane();
 		splitPane_1.setOneTouchExpandable(true);
 		splitPane_1.setEnabled(false);
@@ -96,10 +98,16 @@ public class JobFlowFrame extends JFrame {
 		panel_2.add(newSimButton, gbc_newSimButton);
 		newSimButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				newSimulationAction();
 			}
 		});
 		
 		JButton loadSimButton = new JButton("Wczytaj symulacj\u0119");
+		loadSimButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				loadSimulationAction();
+			}
+		});
 		GridBagConstraints gbc_loadSimButton = new GridBagConstraints();
 		gbc_loadSimButton.fill = GridBagConstraints.HORIZONTAL;
 		gbc_loadSimButton.weightx = 1.0;
@@ -110,6 +118,11 @@ public class JobFlowFrame extends JFrame {
 		panel_2.add(loadSimButton, gbc_loadSimButton);
 		
 		JButton btnZapiszRaportPdf = new JButton("Zapisz raport PDF");
+		btnZapiszRaportPdf.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				saveSimulationAction();
+			}
+		});
 		GridBagConstraints gbc_btnZapiszRaportPdf = new GridBagConstraints();
 		gbc_btnZapiszRaportPdf.weightx = 1.0;
 		gbc_btnZapiszRaportPdf.fill = GridBagConstraints.HORIZONTAL;
@@ -118,6 +131,7 @@ public class JobFlowFrame extends JFrame {
 		panel_2.add(btnZapiszRaportPdf, gbc_btnZapiszRaportPdf);
 		
 		JPanel panel = new JPanel();
+		
 		splitPane_1.setRightComponent(panel);
 		GridBagLayout gbl_panel = new GridBagLayout();
 		gbl_panel.columnWidths = new int[]{121, 0};
@@ -139,6 +153,13 @@ public class JobFlowFrame extends JFrame {
 				{
 				 optionsFrame = new OptionsFrame();
 				optionsFrame.setVisible(true);
+					optionsFrame.setDataStore(dataStore);
+					optionsFrame.setGUI();
+					optionsFrame.updateRuleGUI();
+					optionsFrame.updateOpoznienieGUI();
+					optionsFrame.updateMacierzPrzezbrojen();
+					optionsFrame.updateKolejnoscJobComboBox();
+					optionsFrame.updateKolejnoscGUI(0);
 				}
 			}
 		});
@@ -147,7 +168,55 @@ public class JobFlowFrame extends JFrame {
 		gbc_btnOpcje.fill = GridBagConstraints.HORIZONTAL;
 		gbc_btnOpcje.gridx = 0;
 		gbc_btnOpcje.gridy = 0;
+		
+		
+		GridBagConstraints gbc_simulationSizeSlider = new GridBagConstraints();
+		gbc_simulationSizeSlider.weightx = 1.0;
+		gbc_simulationSizeSlider.fill = GridBagConstraints.HORIZONTAL;
+		gbc_simulationSizeSlider.gridx = 0;
+		gbc_simulationSizeSlider.gridy = 1;
+		simulationSizeSlider = new JSlider(0,20,0);
+		simulationSizeSlider.setMinorTickSpacing(1);
+		simulationSizeSlider.setPaintTicks(true);
+		simulationSizeSlider.setSnapToTicks(true);
+		
+		simulationSizeSlider.addChangeListener(new ChangeListener() {
+			
+			@Override
+			public void stateChanged(ChangeEvent arg0) {
+				JSlider jSlider=(JSlider)arg0.getSource();
+				simulationPanel.setRectSizeByTick(jSlider.getValue()+1);
+				simulationPanel.updateSize();
+				simulationPanel.repaint();
+			}
+		});
+		simulationSizeSlider.setValue(5);
+
+		
+		panel.add(simulationSizeSlider,gbc_simulationSizeSlider);
 		panel.add(btnOpcje, gbc_btnOpcje);
+	}
+
+	
+	
+	protected void saveSimulationAction() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	protected void loadSimulationAction() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	protected void newSimulationAction() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void setDataStore(DataStore tdataStore) {
+		// TODO Auto-generated method stub
+		dataStore=tdataStore;
 	}
 
 }
