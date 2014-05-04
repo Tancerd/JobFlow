@@ -39,6 +39,10 @@ import org.pwr.zssk.dataaccess.DataStore;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.Scanner;
 
 public class JobFlowFrame extends JFrame {
 	OptionsFrame optionsFrame ;
@@ -175,7 +179,7 @@ public class JobFlowFrame extends JFrame {
 		gbc_simulationSizeSlider.fill = GridBagConstraints.HORIZONTAL;
 		gbc_simulationSizeSlider.gridx = 0;
 		gbc_simulationSizeSlider.gridy = 1;
-		simulationSizeSlider = new JSlider(0,20,0);
+		simulationSizeSlider = new JSlider(0,10,0);
 		simulationSizeSlider.setMinorTickSpacing(1);
 		simulationSizeSlider.setPaintTicks(true);
 		simulationSizeSlider.setSnapToTicks(true);
@@ -211,7 +215,25 @@ public class JobFlowFrame extends JFrame {
 
 	protected void newSimulationAction() {
 		// TODO Auto-generated method stub
-		
+		File file = new File("data.txt");
+	      Scanner in = null;
+		try {
+			in = new Scanner(file);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		ArrayList<String> lineArray= new ArrayList<String>();
+		  while(in.hasNextLine())
+		  {
+	      String zdanie = in.nextLine();
+	      lineArray.add(zdanie);
+	      
+		  }
+		  
+
+		  simulationPanel.simulationInit(dataStore.getMachineNumber(),lineArray.toArray(new String[lineArray.size()]));
+		  
 	}
 
 	public void setDataStore(DataStore tdataStore) {

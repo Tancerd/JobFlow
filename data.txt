@@ -1,0 +1,40 @@
+Time: 0 Job 1 to Machine 1
+Time: 0 Machine 1: END WAITING
+Time: 0 Job 2 to Machine 1
+Time: 0 Machine 1: START JOB 1
+Time: 10 Machine 1: END JOB 1
+Time: 10 Job 1 to Machine 3
+Time: 10 Machine 3: END WAITING
+Time: 10 Machine 1: START PREPARE 1
+Time: 14 Machine 1: END PREPARE 1
+Time: 10 Machine 3: START JOB 1
+Time: 15 Machine 3: END JOB 1
+Time: 14 Machine 1: START JOB 2
+Time: 24 Machine 1: END JOB 2
+Time: 15 Job 1 to Machine 2
+Time: 15 Machine 2: END WAITING
+Time: 15 Machine 3: START PREPARE 1
+Time: 19 Machine 3: END PREPARE 1
+Time: 15 Machine 2: START JOB 1
+Time: 23 Machine 2: END JOB 1
+Time: 19 Machine 3: START WAITING 1
+Time: 23 Machine 2: START PREPARE 1
+Time: 27 Machine 2: END PREPARE 1
+Time: 24 Job 2 to Machine 3
+Time: 24 Machine 3: END WAITING
+Time: 24 Machine 1: START PREPARE 2
+Time: 30 Machine 1: END PREPARE 2
+Time: 24 Machine 3: START JOB 2
+Time: 29 Machine 3: END JOB 2
+Time: 27 Machine 2: START WAITING 1
+Time: 29 Job 2 to Machine 2
+Time: 29 Machine 2: END WAITING
+Time: 29 Machine 3: START PREPARE 2
+Time: 35 Machine 3: END PREPARE 2
+Time: 29 Machine 2: START JOB 2
+Time: 37 Machine 2: END JOB 2
+Time: 30 Machine 1: START WAITING 2
+Time: 35 Machine 3: START WAITING 2
+Time: 37 Machine 2: START PREPARE 2
+Time: 43 Machine 2: END PREPARE 2
+Time: 43 Machine 2: START WAITING 2

@@ -1,5 +1,10 @@
 package org.pwr.zssk.view;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.Scanner;
+
 import org.pwr.zssk.dataaccess.DataStore;
 
 public class GUI {
@@ -14,9 +19,13 @@ public class GUI {
 	
 	public GUI()
 	{
+		
+		
 		dataStore= new DataStore();
 		jobFlowFrame= new JobFlowFrame();
 		jobFlowFrame.setDataStore(dataStore);
 		jobFlowFrame.setVisible(true);
+		
+		
 	}
 }
