@@ -36,6 +36,8 @@ import javax.swing.event.ListSelectionEvent;
 import java.awt.event.ActionEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
 
 public class OptionsFrame extends JDialog {
 
@@ -49,6 +51,7 @@ public class OptionsFrame extends JDialog {
 	private JList ruleList;
 	private JComboBox ruleComboBox;
 	private JComboBox jobComboBox;
+	private JButton btnZapisz;
 
 	/**
 	 * Launch the application.
@@ -73,9 +76,9 @@ public class OptionsFrame extends JDialog {
 		tabbedPane.addTab("Og\u00F3lne", null, panel, null);
 		GridBagLayout gbl_panel = new GridBagLayout();
 		gbl_panel.columnWidths = new int[] {100, 150};
-		gbl_panel.rowHeights = new int[]{20, 0, 0};
+		gbl_panel.rowHeights = new int[]{20, 0, 0, 0};
 		gbl_panel.columnWeights = new double[]{0.0, 1.0};
-		gbl_panel.rowWeights = new double[]{0.0, 0.0, Double.MIN_VALUE};
+		gbl_panel.rowWeights = new double[]{0.0, 0.0, 0.0, Double.MIN_VALUE};
 		panel.setLayout(gbl_panel);
 		
 		JLabel lblLiczbaMaszyn = new JLabel("Liczba maszyn");
@@ -116,19 +119,38 @@ public class OptionsFrame extends JDialog {
 		
 		JLabel lblLiczbaJobw = new JLabel("Liczba Job\u00F3w");
 		GridBagConstraints gbc_lblLiczbaJobw = new GridBagConstraints();
-		gbc_lblLiczbaJobw.insets = new Insets(0, 0, 0, 5);
+		gbc_lblLiczbaJobw.insets = new Insets(0, 0, 5, 5);
 		gbc_lblLiczbaJobw.gridx = 0;
 		gbc_lblLiczbaJobw.gridy = 1;
 		panel.add(lblLiczbaJobw, gbc_lblLiczbaJobw);
 		
 		textField = new JFormattedTextField ();
 		GridBagConstraints gbc_textField = new GridBagConstraints();
+		gbc_textField.insets = new Insets(0, 0, 5, 0);
 		gbc_textField.anchor = GridBagConstraints.WEST;
 		gbc_textField.gridx = 1;
 		gbc_textField.gridy = 1;
 		panel.add(textField, gbc_textField);
 		textField.setColumns(10);
 		textField.setValue(new Integer(2));
+		
+		btnZapisz = new JButton("Zapisz");
+		btnZapisz.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				dataStore.setMachineNumber(Integer.parseInt(textField_1.getText()));
+				dataStore.setJobNumber(Integer.parseInt(textField.getText()));
+				updateRuleGUI();
+				updateMacierzPrzezbrojen();
+				updateKolejnoscGUI(0);
+				updateKolejnoscJobComboBox();
+				updateOpoznienieGUI();
+			}
+		});
+		GridBagConstraints gbc_btnZapisz = new GridBagConstraints();
+		gbc_btnZapisz.insets = new Insets(0, 0, 0, 5);
+		gbc_btnZapisz.gridx = 0;
+		gbc_btnZapisz.gridy = 2;
+		panel.add(btnZapisz, gbc_btnZapisz);
 		textField.addPropertyChangeListener(new PropertyChangeListener() {
 			public void propertyChange(PropertyChangeEvent arg0) {
 				try
