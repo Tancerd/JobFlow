@@ -13,6 +13,7 @@ import java.awt.CardLayout;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JSlider;
 import javax.swing.JToolBar;
@@ -36,6 +37,7 @@ import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 
 import org.pwr.zssk.dataaccess.DataStore;
+import org.pwr.zssk.dataaccess.Facade;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -50,13 +52,15 @@ public class JobFlowFrame extends JFrame {
 	private DataStore dataStore;
 	SimulationPanel simulationPanel;
 	JSlider simulationSizeSlider;
-
+	Facade facade;
 	/**
 	 * Create the frame.
+	 * @param facade 
 	 */
-	public JobFlowFrame() {
+	public JobFlowFrame(Facade tfacade) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 800, 600);
+		facade=tfacade;
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -215,7 +219,7 @@ public class JobFlowFrame extends JFrame {
 
 	protected void newSimulationAction() {
 		// TODO Auto-generated method stub
-		File file = new File("data.txt");
+	/*	File file = new File("data.txt");
 	      Scanner in = null;
 		try {
 			in = new Scanner(file);
@@ -230,9 +234,14 @@ public class JobFlowFrame extends JFrame {
 	      lineArray.add(zdanie);
 	      
 		  }
-		  
+		*/
+		facade.setDataStore(dataStore);
+		facade.prepareAlgorithm();
 
-		  simulationPanel.simulationInit(dataStore.getMachineNumber(),lineArray.toArray(new String[lineArray.size()]));
+		facade.Calculate();
+
+		String [] lineArray=facade.getResultStore().getLogs();
+		  simulationPanel.simulationInit(dataStore.getMachineNumber(),lineArray);
 		  
 	}
 

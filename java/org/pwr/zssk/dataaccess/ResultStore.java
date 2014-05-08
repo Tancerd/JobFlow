@@ -9,6 +9,8 @@ public class ResultStore {
 	private double[] averageTimeOfWaitingForJob;
 	private int[] timeOfJobEnd;
 	private int[] numberOfJobsOnMachine;
+	private int[] numberOfJobsDoneByMachine;
+	private String[] logs;
 
 	public int getResultTime() {
 		return resultTime;
@@ -68,5 +70,23 @@ public class ResultStore {
 	public void setNumberOfJobsOnMachine(int[] numberOfJobsOnMachine) {
 		this.numberOfJobsOnMachine = numberOfJobsOnMachine;
 	}
+
+	public int[] getNumberOfJobsDoneByMachine() {
+		return numberOfJobsDoneByMachine;
+	}
+
+	public void setNumberOfJobsDoneByMachine(int[] numberOfJobsDoneByMachine) {
+		this.numberOfJobsDoneByMachine = numberOfJobsDoneByMachine;
+	}
+
+	public String[] getLogs() {
+		return logs;
+	}
+
+	public void setLogs(String[] logs) {
+		this.logs = logs;
+	}
+
+	
 
 }

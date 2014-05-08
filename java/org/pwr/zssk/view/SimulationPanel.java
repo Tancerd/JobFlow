@@ -72,6 +72,9 @@ public class SimulationPanel extends JPanel implements MouseMotionListener{
 	{
 		
 		rectSize=rectSizeTick*tick;
+		computeMaxLength();
+		updateSize();
+		repaint();
 	}
 	public SimulationPanel() {
 		super();
@@ -86,6 +89,7 @@ public class SimulationPanel extends JPanel implements MouseMotionListener{
 	public void paintComponent(Graphics g) {
 		// TODO Auto-generated method stub
 		super.paintComponent(g);
+		collisionMap.clear();
 		g.setColor(Color.white);
 		g.fillRect(0, 0, g.getClipBounds().width, g.getClipBounds().height);
 		drawSimulation(g);
@@ -187,6 +191,7 @@ public class SimulationPanel extends JPanel implements MouseMotionListener{
 						tempRect.width= (time-machinePrepare[machineID-1])*rectSize;
 						tempRect.height= rectSize;
 						collisionMap.add(tempRect);
+						if(time-machinePrepare[machineID-1]!=0)
 						drawSimPrepareAdnotation(g, machinePrepare[machineID-1],machineID-1,machinePrepareAfterJob[machineID-1]);
 					}
 					
@@ -225,7 +230,7 @@ public class SimulationPanel extends JPanel implements MouseMotionListener{
 			g2d.drawLine(offsetX+x*rectSize+rectSize*2/5, offsetY+y*rectSize+rectSize*2/5, offsetX+x*rectSize-rectSize*3, offsetY+y*rectSize+rectSize*(machineNumber+1));
 			g2d.drawLine(offsetX+x*rectSize-rectSize*3, offsetY+y*rectSize+rectSize*(machineNumber+1), offsetX+x*rectSize, offsetY+y*rectSize+rectSize*(machineNumber+1));
 			g.setFont(new Font("TimesRoman", Font.PLAIN, rectSize*1/3)); 
-		g2d.drawString("Prepare after Job "+previousJobID, offsetX+x*rectSize-rectSize*3, offsetY+y*rectSize+rectSize*(machineNumber+1));
+		g2d.drawString("P.A.J."+previousJobID, offsetX+x*rectSize-rectSize*3, offsetY+y*rectSize+rectSize*(machineNumber+1));
 	}
 	public void drawSimulationFromLog(String [] tlogArr)
 	{

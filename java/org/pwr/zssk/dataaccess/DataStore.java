@@ -7,7 +7,7 @@ public class DataStore {
 	private Rule[] rules=new Rule[0];
 	private Integer[][] prepareTimes=new Integer[0][0];
 	private Integer[] arriveTimes=new Integer[0];
-	private String[][] orders= new String[0][0];
+	private String[][] orders=new String[0][0];
 
 	public String[][] getOrders() {
 		return orders;

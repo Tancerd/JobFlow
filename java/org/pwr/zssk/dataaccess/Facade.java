@@ -32,9 +32,21 @@ public class Facade {
 		jobList = new ArrayList<Job>(dataStore.getJobNumber());
 		machineList = new ArrayList<Machine>(dataStore.getMachineNumber());
 		
+		for(int n=0;n<dataStore.getJobNumber();n++)
+		{
+			jobList.add(new Job());
+			jobList.get(n).setId(n+1);
+		}
+		for(int n=0;n<dataStore.getMachineNumber();n++)
+		{
+			machineList.add(new Machine());
+			machineList.get(n).setId(n+1);
+		}
+		
 		this.prepareArriveTimeForJobs();
 		this.prepareOrderForJobs();
 		this.prepareRulesForMachines();
+		this.setPrepareTimeForMachines();
 		
 		jobFlowAlgorithm = new JobFlowAlgorithm();
 		jobFlowAlgorithm.setJobList(jobList);
@@ -45,13 +57,16 @@ public class Facade {
 	{
 		int result = jobFlowAlgorithm.calculate();
 		
-		double[] averageTimeOfMakingJob = new double[dataStore.getMachineNumber()];
-		int[] numberOfJobsOnMachine = new int[dataStore.getMachineNumber()];
-		double[] averageTimeOfPrepareMachine = new double[dataStore.getMachineNumber()];
-		double[] averageTimeOfWaitingForMachine = new double[dataStore.getJobNumber()];
-		double[] averageTimeOfWaitingForJob = new double[dataStore.getMachineNumber()];
-		
+		double[] averageTimeOfMakingJob = new double[dataStore.getMachineNumber()]; //jest
+		int[] numberOfJobsOnMachine = new int[dataStore.getMachineNumber()]; //jest
+		double[] averageTimeOfPrepareMachine = new double[dataStore.getMachineNumber()]; //jest
+		double[] averageTimeOfWaitingForMachine = new double[dataStore.getJobNumber()]; //jest
+		double[] averageTimeOfWaitingForJob = new double[dataStore.getMachineNumber()]; //jest
+		int[] numberOfJobsDoneByMachine = new int[dataStore.getMachineNumber()];
 		int[] timeOfJobEnd = new int[dataStore.getJobNumber()];
+		
+		String[] logs = new String[jobFlowAlgorithm.getLogsList().size()];
+		logs = jobFlowAlgorithm.getLogsList().toArray(logs);
 		
 		for (int i = 0; i < jobFlowAlgorithm.getJobList().size(); i++) {
 			Job j = jobFlowAlgorithm.getJobList().get(i);
@@ -61,7 +76,8 @@ public class Facade {
 				averageTimeOfMakingJob[o.getMachine()-1] += o.getTime();
 				numberOfJobsOnMachine[o.getMachine()-1]++;
 			}
-			//averageTimeOfWaitingForMachine[i] = 0; //TODO
+			averageTimeOfWaitingForMachine[i] = j.getWaitingTime() / j.getOrderList().size();
+			
 			
 			
 		}
@@ -73,7 +89,8 @@ public class Facade {
 			for(Prepare p : m.getPrepareList())
 				averageTimeOfPrepareMachine[i] += p.getTime();
 			averageTimeOfPrepareMachine[i] /= m.getPrepareList().size();
-			
+			numberOfJobsDoneByMachine[i] = m.getJobsNumber();
+			averageTimeOfWaitingForMachine[i] = m.getWaitingTime() / m.getJobsNumber(); 
 			
 		}
 		
@@ -84,6 +101,8 @@ public class Facade {
 		resultStore.setResultTime(result);
 		resultStore.setTimeOfJobEnd(timeOfJobEnd);
 		resultStore.setNumberOfJobsOnMachine(numberOfJobsOnMachine);
+		resultStore.setNumberOfJobsDoneByMachine(numberOfJobsDoneByMachine);
+		resultStore.setLogs(logs);
 		
 	}
 	// liczba maszyn musi siê zgadzac z liczba regul
@@ -133,7 +152,7 @@ public class Facade {
 	private void prepareArriveTimeForJobs() {
 		Integer[] times = dataStore.getArriveTimes();
 		for (int i = 0; i < times.length; i++) {
-			jobList.get(i).setTimeOfNextAction(times[i]);
+			jobList.get(i).setArriveTime(times[i]);
 		}
 	}
 
@@ -147,6 +166,7 @@ public class Facade {
 			{
 				String[] split = s.split(" ");
 				Order order = new Order(Integer.parseInt(split[1]), Integer.parseInt(split[0]));
+				if (split[0].equals("0")) break;
 				orderList.add(order);
 			}
 			jobList.get(i).setOrderList(orderList);

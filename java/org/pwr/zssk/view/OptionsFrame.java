@@ -95,6 +95,8 @@ public class OptionsFrame extends JDialog {
 					updateMacierzPrzezbrojen();
 					updateKolejnoscGUI(0);
 					updateKolejnoscJobComboBox();
+					updateOpoznienieGUI();
+					
 
 				}
 				catch ( Exception e)
@@ -137,7 +139,8 @@ public class OptionsFrame extends JDialog {
 					updateMacierzPrzezbrojen();
 					updateKolejnoscJobComboBox();
 					updateKolejnoscGUI(0);
-					
+					updateRuleGUI();
+
 				}
 				catch ( Exception e)
 				{
@@ -167,7 +170,7 @@ public class OptionsFrame extends JDialog {
 		        Integer[] tempArr=dataStore.getArriveTimes();
 		        try
 		        {
-		        tempArr[tcl.getColumn()]=(Integer) Integer.parseInt((String) tcl.getNewValue());
+		        tempArr[tcl.getColumn()]=(Integer)  tcl.getNewValue();
 		        }
 		        	catch(Exception arg)
 		        	{
@@ -362,11 +365,12 @@ public class OptionsFrame extends JDialog {
 		        Integer[][] tempArr=dataStore.getPrepareTimes();
 		        try
 		        {
-		        tempArr[tcl.getRow()][tcl.getColumn()]=(Integer) Integer.parseInt((String) tcl.getNewValue());
+		        	tempArr[tcl.getRow()][tcl.getColumn()]=(Integer) tcl.getNewValue();
+		        	dataStore.setPrepareTimes(tempArr);
 		        }
 		        	catch(Exception arg)
 		        	{
-		       
+		        		System.out.println(arg.getMessage());
 		        	}
 		    }
 
