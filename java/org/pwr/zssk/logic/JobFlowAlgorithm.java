@@ -24,6 +24,8 @@ public class JobFlowAlgorithm {
 					return -1;
 				if (y instanceof Job && !(x instanceof Job))
 					return 1;
+				if (y instanceof Job && x instanceof Job)
+					return 1;
 				return 0;
 			}
 		}

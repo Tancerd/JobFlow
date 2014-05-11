@@ -8,11 +8,13 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import java.awt.CardLayout;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JSlider;
@@ -128,15 +130,28 @@ public class JobFlowFrame extends JFrame {
 		JButton btnZapiszRaportPdf = new JButton("Zapisz raport PDF");
 		btnZapiszRaportPdf.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				saveSimulationAction();
+				saveSimulationToPDFAction();
 			}
 		});
 		GridBagConstraints gbc_btnZapiszRaportPdf = new GridBagConstraints();
 		gbc_btnZapiszRaportPdf.weightx = 1.0;
 		gbc_btnZapiszRaportPdf.fill = GridBagConstraints.HORIZONTAL;
 		gbc_btnZapiszRaportPdf.gridx = 0;
-		gbc_btnZapiszRaportPdf.gridy = 2;
+		gbc_btnZapiszRaportPdf.gridy = 3;
 		panel_2.add(btnZapiszRaportPdf, gbc_btnZapiszRaportPdf);
+		
+		JButton btnZapiszRaport = new JButton("Zapisz symulacjê");
+		btnZapiszRaport.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				saveSimulationAction();
+			}
+		});
+		GridBagConstraints gbc_btnZapiszRaport = new GridBagConstraints();
+		gbc_btnZapiszRaport.weightx = 1.0;
+		gbc_btnZapiszRaport.fill = GridBagConstraints.HORIZONTAL;
+		gbc_btnZapiszRaport.gridx = 0;
+		gbc_btnZapiszRaport.gridy = 2;
+		panel_2.add(btnZapiszRaport, gbc_btnZapiszRaport);
 		
 		JPanel panel = new JPanel();
 		
@@ -209,40 +224,50 @@ public class JobFlowFrame extends JFrame {
 	
 	protected void saveSimulationAction() {
 		// TODO Auto-generated method stub
+		JFileChooser fileChooser = new JFileChooser();
+		fileChooser.setMultiSelectionEnabled(false);
+		fileChooser.setAcceptAllFileFilterUsed(false);
+		FileNameExtensionFilter filter = new FileNameExtensionFilter("JobFlow Project", "jfp");
+		fileChooser.setFileFilter(filter);
+		if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
+		  File file = fileChooser.getSelectedFile();
+		  file=(new File(file.getAbsolutePath()+".jfp"));
+		  System.out.println(file.getAbsolutePath());
+		  dataStore.write(file.getAbsolutePath());
+		}
+	}
+	protected void saveSimulationToPDFAction()
+	{
 		
 	}
-
 	protected void loadSimulationAction() {
 		// TODO Auto-generated method stub
+		JFileChooser fileChooser = new JFileChooser();
+		fileChooser.setMultiSelectionEnabled(false);
+		fileChooser.setAcceptAllFileFilterUsed(false);
+		FileNameExtensionFilter filter = new FileNameExtensionFilter("JobFlow Project", "jfp");
+		fileChooser.setFileFilter(filter);
+		if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+		  File file = fileChooser.getSelectedFile();
+		  System.out.println(file.getAbsolutePath());
+		  dataStore=dataStore.read(file.getAbsolutePath());
+		}
 		
 	}
 
 	protected void newSimulationAction() {
 		// TODO Auto-generated method stub
-	/*	File file = new File("data.txt");
-	      Scanner in = null;
-		try {
-			in = new Scanner(file);
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		ArrayList<String> lineArray= new ArrayList<String>();
-		  while(in.hasNextLine())
-		  {
-	      String zdanie = in.nextLine();
-	      lineArray.add(zdanie);
-	      
-		  }
-		*/
+	
 		facade.setDataStore(dataStore);
 		facade.prepareAlgorithm();
 
 		facade.Calculate();
-
+		JobFlowLogFrame jFLF = new JobFlowLogFrame();
+		jFLF.setLog(facade.getResultStore().toString());
 		String [] lineArray=facade.getResultStore().getLogs();
-		  simulationPanel.simulationInit(dataStore.getMachineNumber(),lineArray);
-		  
+		  simulationPanel.simulationInit(dataStore.getMachineNumber(),dataStore.getJobNumber(),lineArray);
+		 
+		
 	}
 
 	public void setDataStore(DataStore tdataStore) {

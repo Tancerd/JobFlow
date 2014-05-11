@@ -12,6 +12,50 @@ public class ResultStore {
 	private int[] numberOfJobsDoneByMachine;
 	private String[] logs;
 
+	@Override
+	public String toString() {
+		String str="";
+		
+		str+="Œredni czas wykonywania Jobów: \n";
+		for(int n=0;n<averageTimeOfMakingJob.length;n++)
+			str+=(n+1)+": "+averageTimeOfMakingJob[n]+"\n";
+		str+="\n";
+		
+		str+="Œredni czas przygotowywania maszyn: \n";
+		for(int n=0;n<averageTimeOfPrepareMachine.length;n++)
+			str+=(n+1)+": "+averageTimeOfPrepareMachine[n]+"\n";
+		str+="\n";
+		
+		str+="Œredni czas czekania na maszynê: \n";
+		for(int n=0;n<averageTimeOfWaitingForMachine.length;n++)
+			str+=(n+1)+": "+averageTimeOfWaitingForMachine[n]+"\n";
+		str+="\n";
+		
+		str+="Œredni czas czekania na zadanie: \n";
+		for(int n=0;n<averageTimeOfWaitingForJob.length;n++)
+			str+=(n+1)+": "+averageTimeOfWaitingForJob[n]+"\n";
+		str+="\n";
+		
+		str+="Czas zakoñczenia zadañ: \n";
+		for(int n=0;n<timeOfJobEnd.length;n++)
+			str+=(n+1)+": "+timeOfJobEnd[n]+"\n";
+		str+="\n";
+		
+		
+		str+="Iloœæ zadañ na maszynie: \n";
+		for(int n=0;n<numberOfJobsOnMachine.length;n++)
+			str+=(n+1)+": "+numberOfJobsOnMachine[n]+"\n";
+		str+="\n";
+		
+		
+		str+="Iloœæ zadañ wykonanych przez maszynê: \n";
+		for(int n=0;n<numberOfJobsDoneByMachine.length;n++)
+			str+=(n+1)+": "+numberOfJobsDoneByMachine[n]+"\n";
+		str+="\n";
+		
+		
+		return str;
+	}
 	public int getResultTime() {
 		return resultTime;
 	}
