@@ -32,6 +32,7 @@ public class SimulationPanel extends JPanel implements MouseMotionListener{
 	int [] machineWhichOneJob;
 	int [] machinePrepareAfterJob;
 	int [] jobWaiting;
+	int [] jobPrepare;
 	String [] logArray= new String[0];
 	ArrayList<Rectangle> collisionMap= new ArrayList<Rectangle>();
 	public void computeMaxLength()
@@ -59,10 +60,11 @@ public class SimulationPanel extends JPanel implements MouseMotionListener{
 		machinePrepare= new int[machineNumber];
 		machineWhichOneJob= new int[machineNumber];
 		machinePrepareAfterJob= new int[machineNumber];
+		jobPrepare= new int[jobNumber];
 		jobWaiting= new int[jobNumber];
 		for(int n=0;n< machineNumber;n++)
 		{
-			machineWaiting[n]=-1;
+			machineWaiting[n]=0;
 			machineJobStart[n]=-1;
 			machinePrepare[n]=-1;
 			machineWhichOneJob[n]=-1;
@@ -71,6 +73,7 @@ public class SimulationPanel extends JPanel implements MouseMotionListener{
 		for(int n=0;n<jobNumber;n++)
 		{
 			jobWaiting[n]=0;
+			jobPrepare[n]=0;
 		}
 		computeMaxLength();
 		updateSize();
@@ -102,6 +105,19 @@ public class SimulationPanel extends JPanel implements MouseMotionListener{
 		super.paintComponent(g);
 		collisionMap.clear();
 		g.setColor(Color.white);
+		for(int n=0;n<jobNumber;n++)
+		{
+			jobWaiting[n]=0;
+			jobPrepare[n]=-1;
+		}
+		for(int n=0;n< machineNumber;n++)
+		{
+			machineWaiting[n]=0;
+			machineJobStart[n]=-1;
+			machinePrepare[n]=-1;
+			machineWhichOneJob[n]=-1;
+			machinePrepareAfterJob[n]=-1;
+		}
 		g.fillRect(0, 0, g.getClipBounds().width, g.getClipBounds().height);
 		drawSimulation(g,"Machine");
 		drawWireMesh(g,"Machine");
@@ -113,6 +129,7 @@ public class SimulationPanel extends JPanel implements MouseMotionListener{
 			machineWhichOneJob[n]=-1;
 			machinePrepareAfterJob[n]=-1;
 		}
+		
 		fillJobWaiting(g);
 		drawSimulation(g,"Job");
 		drawWireMesh(g,"Job");
@@ -156,7 +173,12 @@ public class SimulationPanel extends JPanel implements MouseMotionListener{
 			String []tempArray=logArray[n].split(" ");
 			
 			int time= Integer.parseInt(tempArray[1]);
-
+			if(tempArray[2].equals("Job") && (str.equals("Machine")))
+			{
+				int jobID= Integer.parseInt(tempArray[3].replace(":", ""));
+				if(jobPrepare[jobID-1]==-1)
+					jobPrepare[jobID-1]=time;
+			}
 			if(tempArray[2].equals("Machine"))
 			{
 				int machineID= Integer.parseInt(tempArray[3].replace(":", ""));
@@ -245,7 +267,8 @@ public class SimulationPanel extends JPanel implements MouseMotionListener{
 			g2d.setColor(Color.gray);
 		if(type.equals("JOB"))
 			g2d.setColor(Color.yellow);
-		
+		if(type.equals("JOB_PREPARE"))
+			g2d.setColor(Color.white);
 		g2d.fillRect(offsetX+x*rectSize, offsetYMachineJob+offsetY+y*rectSize, width*rectSize, rectSize);
 	}
 	private void fillJobWaiting(Graphics g)
@@ -253,6 +276,7 @@ public class SimulationPanel extends JPanel implements MouseMotionListener{
 		for(int n=0;n<jobNumber;n++)
 		{
 			drawSimRect(g,0,n,jobWaiting[n],"WAIT","Job");	
+			drawSimRect(g,0,n,jobPrepare[n],"JOB_PREPARE","Job");	
 		}
 	}
 	private void drawSimString(Graphics g, int x, int y, String stri, String str)

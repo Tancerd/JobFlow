@@ -24,8 +24,12 @@ public class JobFlowAlgorithm {
 					return -1;
 				if (y instanceof Job && !(x instanceof Job))
 					return 1;
-				if (y instanceof Job && x instanceof Job)
-					return 1;
+				if (y instanceof Job && x instanceof Job) {
+					int indexOfJobX = ((Job)x).getId();
+					int indexOfJobY = ((Job)y).getId();
+					if (indexOfJobX > indexOfJobY) return 1;
+					else return -1;
+				}
 				return 0;
 			}
 		}
@@ -54,42 +58,55 @@ public class JobFlowAlgorithm {
 				Machine machine = findMachine(job);
 				if (machine == null)
 					continue;
-				//System.out.println("Time: " + job.getTimeOfNextAction() + " Job " + job.getId() + " to Machine " + machine.getId());
-				logsList.add("Time: " + job.getTimeOfNextAction() + " Job " + job.getId() + " to Machine " + machine.getId());
+				// System.out.println("Time: " + job.getTimeOfNextAction() +
+				// " Job " + job.getId() + " to Machine " + machine.getId());
+				logsList.add("Time: " + job.getTimeOfNextAction() + " Job "
+						+ job.getId() + " to Machine " + machine.getId());
 				job.setStartingWaitDate(job.getTimeOfNextAction());
-				machine.addNewJob(job);				
+				machine.addNewJob(job);
 				if (machine.getStatus().equals(MachineStatus.WAITING)
 						&& machine.justReturnedToWork()) {
 					machine.setTimeOfNextAction(job.getTimeOfNextAction());
 					orderQueue.add(machine);
-					//System.out.println("Time: " + job.getTimeOfNextAction() + " Machine " + machine.getId() + ": END " +  machine.getStatus());
-					logsList.add("Time: " + job.getTimeOfNextAction() + " Machine " + machine.getId() + ": END " +  machine.getStatus());
+					// System.out.println("Time: " + job.getTimeOfNextAction() +
+					// " Machine " + machine.getId() + ": END " +
+					// machine.getStatus());
+					logsList.add("Time: " + job.getTimeOfNextAction()
+							+ " Machine " + machine.getId() + ": END "
+							+ machine.getStatus());
 				}
 			} else {
 				Machine machine = (Machine) orderComponent;
 				int oldTime = machine.getTimeOfNextAction();
 				machine.setNextAction();
 				calculateTime = machine.getTimeOfNextAction();
-				//System.out.println("Time: " + oldTime + " Machine " + machine.getId() + ": START " +  machine.getStatus() + " " + machine.getDoneJob().getId());
-				logsList.add("Time: " + oldTime + " Machine " + machine.getId() + ": START " +  machine.getStatus() + " " + machine.getDoneJob().getId());
+				// System.out.println("Time: " + oldTime + " Machine " +
+				// machine.getId() + ": START " + machine.getStatus() + " " +
+				// machine.getDoneJob().getId());
+				logsList.add("Time: " + oldTime + " Machine " + machine.getId()
+						+ ": START " + machine.getStatus() + " "
+						+ machine.getDoneJob().getId());
 
 				if (machine.getStatus().equals(MachineStatus.JOB)) {
 					Job job = machine.getDoneJob();
 					job.setTimeOfNextAction(calculateTime);
 					job.setNextAction();
-					//System.out.println("Done Job: " + job.getId());
-					//logsList.add("Done Job: " + job.getId());
+					// System.out.println("Done Job: " + job.getId());
+					// logsList.add("Done Job: " + job.getId());
 					orderQueue.add(job);
 				}
-				if (!machine.getStatus().equals(MachineStatus.WAITING))
-				{
-					//System.out.println("Time: " + calculateTime + " Machine " + machine.getId() + ": END " +  machine.getStatus() + " " + machine.getDoneJob().getId());
-					logsList.add("Time: " + calculateTime + " Machine " + machine.getId() + ": END " +  machine.getStatus() + " " + machine.getDoneJob().getId());
+				if (!machine.getStatus().equals(MachineStatus.WAITING)) {
+					// System.out.println("Time: " + calculateTime + " Machine "
+					// + machine.getId() + ": END " + machine.getStatus() + " "
+					// + machine.getDoneJob().getId());
+					logsList.add("Time: " + calculateTime + " Machine "
+							+ machine.getId() + ": END " + machine.getStatus()
+							+ " " + machine.getDoneJob().getId());
 					orderQueue.add(machine);
 				}
 			}
 		}
-		//System.out.println("----------------------------------------");
+		// System.out.println("----------------------------------------");
 		return calculateTime;
 	}
 
@@ -123,6 +140,5 @@ public class JobFlowAlgorithm {
 	public List<String> getLogsList() {
 		return logsList;
 	}
-	
 
 }

@@ -90,7 +90,7 @@ public class Facade {
 				averageTimeOfPrepareMachine[i] += p.getTime();
 			averageTimeOfPrepareMachine[i] /= m.getPrepareList().size();
 			numberOfJobsDoneByMachine[i] = m.getJobsNumber();
-			averageTimeOfWaitingForMachine[i] = m.getWaitingTime() / m.getJobsNumber(); 
+			//averageTimeOfWaitingForMachine[i] = m.getWaitingTime() / m.getJobsNumber(); 
 			
 		}
 		
