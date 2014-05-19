@@ -57,11 +57,11 @@ public class Facade {
 	{
 		int result = jobFlowAlgorithm.calculate();
 		
-		double[] averageTimeOfMakingJob = new double[dataStore.getMachineNumber()]; //jest
+		double[] TimeOfMakingJob = new double[dataStore.getMachineNumber()]; //jest
 		int[] numberOfJobsOnMachine = new int[dataStore.getMachineNumber()]; //jest
-		double[] averageTimeOfPrepareMachine = new double[dataStore.getMachineNumber()]; //jest
-		double[] averageTimeOfWaitingForMachine = new double[dataStore.getJobNumber()]; //jest
-		double[] averageTimeOfWaitingForJob = new double[dataStore.getMachineNumber()]; //jest
+		double[] TimeOfPrepareMachine = new double[dataStore.getMachineNumber()]; //jest
+		double[] TimeOfWaitingForMachine = new double[dataStore.getJobNumber()]; //jest
+		double[] TimeOfWaitingForJob = new double[dataStore.getMachineNumber()]; //jest
 		int[] numberOfJobsDoneByMachine = new int[dataStore.getMachineNumber()];
 		int[] timeOfJobEnd = new int[dataStore.getJobNumber()];
 		
@@ -73,31 +73,28 @@ public class Facade {
 			timeOfJobEnd[i] = j.getTimeOfNextAction();
 			for (Order o : j.getOrderList())
 			{
-				averageTimeOfMakingJob[o.getMachine()-1] += o.getTime();
+				TimeOfMakingJob[o.getMachine()-1] += o.getTime();
 				numberOfJobsOnMachine[o.getMachine()-1]++;
 			}
-			averageTimeOfWaitingForMachine[i] = j.getWaitingTime() / j.getOrderList().size();
+			TimeOfWaitingForMachine[i] = (float)j.getWaitingTime();
 			
 			
 			
 		}
 		
-		for (int i = 0; i < jobFlowAlgorithm.getMachineList().size(); i++) {
-			averageTimeOfMakingJob[i] /= numberOfJobsOnMachine[i];
-			
+		for (int i = 0; i < jobFlowAlgorithm.getMachineList().size(); i++) {			
 			Machine m = jobFlowAlgorithm.getMachineList().get(i);
 			for(Prepare p : m.getPrepareList())
-				averageTimeOfPrepareMachine[i] += p.getTime();
-			averageTimeOfPrepareMachine[i] /= m.getPrepareList().size();
+				TimeOfPrepareMachine[i] += p.getTime();
 			numberOfJobsDoneByMachine[i] = m.getJobsNumber();
-			//averageTimeOfWaitingForMachine[i] = m.getWaitingTime() / m.getJobsNumber(); 
+			TimeOfWaitingForJob[i] = (float)m.getWaitingTime(); 
 			
 		}
 		
-		resultStore.setAverageTimeOfMakingJob(averageTimeOfMakingJob);
-		resultStore.setAverageTimeOfPrepareMachine(averageTimeOfPrepareMachine);
-		resultStore.setAverageTimeOfWaitingForJob(averageTimeOfWaitingForJob);
-		resultStore.setAverageTimeOfWaitingForMachine(averageTimeOfWaitingForMachine);
+		resultStore.setTimeOfMakingJob(TimeOfMakingJob);
+		resultStore.setTimeOfPrepareMachine(TimeOfPrepareMachine);
+		resultStore.setTimeOfWaitingForJob(TimeOfWaitingForJob);
+		resultStore.setTimeOfWaitingForMachine(TimeOfWaitingForMachine);
 		resultStore.setResultTime(result);
 		resultStore.setTimeOfJobEnd(timeOfJobEnd);
 		resultStore.setNumberOfJobsOnMachine(numberOfJobsOnMachine);

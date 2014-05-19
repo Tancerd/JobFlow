@@ -3,10 +3,10 @@ package org.pwr.zssk.dataaccess;
 public class ResultStore {
 
 	private int resultTime;
-	private double[] averageTimeOfMakingJob;
-	private double[] averageTimeOfPrepareMachine;
-	private double[] averageTimeOfWaitingForMachine;
-	private double[] averageTimeOfWaitingForJob;
+	private double[] TimeOfMakingJob;
+	private double[] TimeOfPrepareMachine;
+	private double[] TimeOfWaitingForMachine;
+	private double[] TimeOfWaitingForJob;
 	private int[] timeOfJobEnd;
 	private int[] numberOfJobsOnMachine;
 	private int[] numberOfJobsDoneByMachine;
@@ -16,24 +16,26 @@ public class ResultStore {
 	public String toString() {
 		String str="";
 		
-		str+="Œredni czas wykonywania Jobów: \n";
-		for(int n=0;n<averageTimeOfMakingJob.length;n++)
-			str+=(n+1)+": "+averageTimeOfMakingJob[n]+"\n";
+		str+="Czas zakoñczenia wszystkich prac: " + resultTime + "\n\n";
+		
+		str+="Ca³kowity czas wykonywania Jobów: \n";
+		for(int n=0;n<TimeOfMakingJob.length;n++)
+			str+=(n+1)+": "+TimeOfMakingJob[n]+"\n";
 		str+="\n";
 		
-		str+="Œredni czas przygotowywania maszyn: \n";
-		for(int n=0;n<averageTimeOfPrepareMachine.length;n++)
-			str+=(n+1)+": "+averageTimeOfPrepareMachine[n]+"\n";
+		str+="Ca³kowity czas przygotowywania maszyn: \n";
+		for(int n=0;n<TimeOfPrepareMachine.length;n++)
+			str+=(n+1)+": "+TimeOfPrepareMachine[n]+"\n";
 		str+="\n";
 		
-		str+="Œredni czas czekania na maszynê: \n";
-		for(int n=0;n<averageTimeOfWaitingForMachine.length;n++)
-			str+=(n+1)+": "+averageTimeOfWaitingForMachine[n]+"\n";
+		str+="Ca³kowity czas czekania na maszynê: \n";
+		for(int n=0;n<TimeOfWaitingForMachine.length;n++)
+			str+=(n+1)+": "+TimeOfWaitingForMachine[n]+"\n";
 		str+="\n";
 		
-		str+="Œredni czas czekania na zadanie: \n";
-		for(int n=0;n<averageTimeOfWaitingForJob.length;n++)
-			str+=(n+1)+": "+averageTimeOfWaitingForJob[n]+"\n";
+		str+="Ca³kowity czas czekania na zadanie: \n";
+		for(int n=0;n<TimeOfWaitingForJob.length;n++)
+			str+=(n+1)+": "+TimeOfWaitingForJob[n]+"\n";
 		str+="\n";
 		
 		str+="Czas zakoñczenia zadañ: \n";
@@ -64,41 +66,32 @@ public class ResultStore {
 		this.resultTime = resultTime;
 	}
 
-	public double[] getAverageTimeOfMakingJob() {
-		return averageTimeOfMakingJob;
-	}
+	
 
-	public void setAverageTimeOfMakingJob(double[] averageTimeOfMakingJob) {
-		this.averageTimeOfMakingJob = averageTimeOfMakingJob;
+	public double[] getTimeOfMakingJob() {
+		return TimeOfMakingJob;
 	}
-
-	public double[] getAverageTimeOfPrepareMachine() {
-		return averageTimeOfPrepareMachine;
+	public void setTimeOfMakingJob(double[] timeOfMakingJob) {
+		TimeOfMakingJob = timeOfMakingJob;
 	}
-
-	public void setAverageTimeOfPrepareMachine(
-			double[] averageTimeOfPrepareMachine) {
-		this.averageTimeOfPrepareMachine = averageTimeOfPrepareMachine;
+	public double[] getTimeOfPrepareMachine() {
+		return TimeOfPrepareMachine;
 	}
-
-	public double[] getAverageTimeOfWaitingForMachine() {
-		return averageTimeOfWaitingForMachine;
+	public void setTimeOfPrepareMachine(double[] timeOfPrepareMachine) {
+		TimeOfPrepareMachine = timeOfPrepareMachine;
 	}
-
-	public void setAverageTimeOfWaitingForMachine(
-			double[] averageTimeOfWaitingForMachine) {
-		this.averageTimeOfWaitingForMachine = averageTimeOfWaitingForMachine;
+	public double[] getTimeOfWaitingForMachine() {
+		return TimeOfWaitingForMachine;
 	}
-
-	public double[] getAverageTimeOfWaitingForJob() {
-		return averageTimeOfWaitingForJob;
+	public void setTimeOfWaitingForMachine(double[] timeOfWaitingForMachine) {
+		TimeOfWaitingForMachine = timeOfWaitingForMachine;
 	}
-
-	public void setAverageTimeOfWaitingForJob(
-			double[] averageTimeOfWaitingForJob) {
-		this.averageTimeOfWaitingForJob = averageTimeOfWaitingForJob;
+	public double[] getTimeOfWaitingForJob() {
+		return TimeOfWaitingForJob;
 	}
-
+	public void setTimeOfWaitingForJob(double[] timeOfWaitingForJob) {
+		TimeOfWaitingForJob = timeOfWaitingForJob;
+	}
 	public int[] getTimeOfJobEnd() {
 		return timeOfJobEnd;
 	}
