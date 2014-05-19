@@ -87,7 +87,11 @@ public class Facade {
 			for(Prepare p : m.getPrepareList())
 				TimeOfPrepareMachine[i] += p.getTime();
 			numberOfJobsDoneByMachine[i] = m.getJobsNumber();
+
 			TimeOfWaitingForJob[i] = (float)m.getWaitingTime(); 
+
+			TimeOfWaitingForJob[i] = m.getWaitingTime(); 
+
 			
 		}
 		
